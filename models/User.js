@@ -1,3 +1,4 @@
+const usersCollection = require('../db').collection('users')
 const validator = require('validator')
 
 let User = function(data) {
@@ -20,7 +21,7 @@ User.prototype.cleanUp = function (){
 User.prototype.validate = function() {
     if (this.data.username == "") {this.data.errors.push("You must provide a username!")}
     if (this.data.username != "" && !validator.isAlphanumeric(this.data.username)) {
-        this.data.push("Username can only contain letters and numbers!")
+        this.errors.push("Username can only contain letters and numbers!")
     }
     if (!validator.isEmail(this.data.email)) {this.errors.push("You must provide a valid email address!")}
     if (this.data.password == "") {this.errors.push("You must provide a password!")}
@@ -42,7 +43,9 @@ User.prototype.register = function() {
     this.cleanUp()
     this.validate()
 
-    //if there are no errors, store to databases
+    if(!this.errors.length) {
+        usersCollection.insertOne(this.data)
+    }
 }
 
 module.exports = User

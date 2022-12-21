@@ -1,7 +1,7 @@
 const User = require('../models/User')
 
 exports.login = (req, res) => {
-    console.log('login')
+    
 }
 
 exports.logout = (req, res) => {
@@ -16,7 +16,6 @@ exports.register = (req, res) => {
     if (user.errors.length) {
         res.send(user.errors)
     } else {
-        console.log(user)
         res.send("No errors")
     }
 }
