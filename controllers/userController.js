@@ -1,7 +1,17 @@
-exports.home = (req, res) => {
-    res.render('home-guest')
+exports.login = (req, res) => {
+    
+}
+
+exports.logout = (req, res) => {
+    
 }
 
 exports.register = (req, res) => {
-    res.send('attempted registration')
+    console.log(req.body)
+    res.send('attempted registration!s')
+}
+
+
+exports.home = (req, res) => {
+    res.render('home-guest')
 }
