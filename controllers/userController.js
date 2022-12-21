@@ -1,7 +1,7 @@
 const User = require('../models/User')
 
 exports.login = (req, res) => {
-    
+    console.log('login')
 }
 
 exports.logout = (req, res) => {

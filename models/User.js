@@ -41,6 +41,8 @@ User.prototype.validate = function() {
 User.prototype.register = function() {
     this.cleanUp()
     this.validate()
+
+    //if there are no errors, store to databases
 }
 
 module.exports = User
