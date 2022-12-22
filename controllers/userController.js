@@ -1,28 +1,24 @@
 const User = require('../models/User')
 
-exports.login = function(req, res) {
-  let user = new User(req.body)
-  user.login().then(function(result) {
+exports.login = (req, res) => {
+  const user = new User(req.body)
+  user.login().then(result => {
     res.send(result)
-  }).catch(function(e) {
+  }).catch(e => {
     res.send(e)
   })
 }
 
-exports.logout = function() {
+exports.logout = (req, res) => {
   
 }
 
-exports.register = function(req, res) {
-  let user = new User(req.body)
+exports.register = (req, res) => {
+  const user = new User(req.body)
   user.register()
-  if (user.errors.length) {
-    res.send(user.errors)
-  } else {
-    res.send("Congrats, there are no errors.")
-  }
+  user.errors.length ? res.send(user.errors) : res.send("Congrats, there are no errors.")
 }
 
-exports.home = function(req, res) {
+exports.home = (req, res) => {
   res.render('home-guest')
 }
