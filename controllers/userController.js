@@ -4,10 +4,14 @@ exports.login = (req, res) => {
   const user = new User(req.body)
   user.login().then(result => {
     req.session.usr = { username: user.data.username }
-    req.session.save(() => {})
-    res.redirect('/')
+    req.session.save(() => {
+        res.redirect('/')
+    })
   }).catch(e => {
-    res.send(e)
+    req.flash('errors', e)
+    req.session.save(() => {
+        res.redirect('/')
+    })
   })
 }
 
@@ -24,5 +28,5 @@ exports.register = (req, res) => {
 }
 
 exports.home = (req, res) => {
-  req.session.usr ? res.render('home-dashboard', { username: req.session.usr.username }) : res.render('home-guest')
+  req.session.usr ? res.render('home-dashboard', { username: req.session.usr.username }) : res.render('home-guest') //, { errors: req.flash.errors }
 }
