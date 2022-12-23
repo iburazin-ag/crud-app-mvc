@@ -9,7 +9,7 @@ exports.login = (req, res) => {
     })
   }).catch(e => {
       req.session.save(() => {
-          req.flash('errors', e) //e
+          req.flash('errors', e) 
           res.redirect('/')
     })
   })
@@ -24,9 +24,22 @@ exports.logout = (req, res) => {
 exports.register = (req, res) => {
   const user = new User(req.body)
   user.register()
-  user.errors.length ? res.send(user.errors) : res.send("Congrats, there are no errors.")//res.redirect('/')
+  if (user.errors.length) {
+    user.errors.forEach((error) => {
+        req.flash('regErrors', error)
+    })
+    req.session.save(() => {
+        res.redirect('/')
+    })
+  } else {
+    req.session.usr = { username: user.data.username }
+    req.session.save(() => {
+        res.redirect('/')
+    })
+  }
+ // user.errors.length ? res.send(user.errors) : res.send("Congrats, there are no errors.")
 }
 
 exports.home = (req, res) => {
-  !req.session.usr ? res.render('home-guest') : res.render('home-dashboard', { username: req.session.usr.username })  //, { errors: req.flash.errors }
+  !req.session.usr ? res.render('home-guest') : res.render('home-dashboard', { username: req.session.usr.username })  
 }
