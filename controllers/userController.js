@@ -21,22 +21,23 @@ exports.logout = (req, res) => {
   })
 }
 
-exports.register = (req, res) => {
+
+exports.register = async (req, res) => {
   const user = new User(req.body)
-  user.register()
-  if (user.errors.length) {
-    user.errors.forEach((error) => {
+  await user.register().then(() => {
+    req.session.usr = { username: user.data.username }
+    req.session.save(() => {
+        res.redirect('/')
+    })
+  }).catch((regErrors) => {
+    regErrors.forEach((error) => {
         req.flash('regErrors', error)
     })
     req.session.save(() => {
         res.redirect('/')
     })
-  } else {
-    req.session.usr = { username: user.data.username }
-    req.session.save(() => {
-        res.redirect('/')
-    })
-  }
+  })
+  
  // user.errors.length ? res.send(user.errors) : res.send("Congrats, there are no errors.")
 }
 
