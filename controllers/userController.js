@@ -8,9 +8,9 @@ exports.login = (req, res) => {
         res.redirect('/')
     })
   }).catch(e => {
-    req.flash('errors', e)
-    req.session.save(() => {
-        res.redirect('/')
+      req.session.save(() => {
+          req.flash('errors', e) //e
+          res.redirect('/')
     })
   })
 }
@@ -28,5 +28,5 @@ exports.register = (req, res) => {
 }
 
 exports.home = (req, res) => {
-  req.session.usr ? res.render('home-dashboard', { username: req.session.usr.username }) : res.render('home-guest') //, { errors: req.flash.errors }
+  !req.session.usr ? res.render('home-guest') : res.render('home-dashboard', { username: req.session.usr.username })  //, { errors: req.flash.errors }
 }
