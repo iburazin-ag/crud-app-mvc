@@ -1,9 +1,9 @@
 const User = require('../models/User')
 
 exports.loggedIn = function(req, res, next) {
-    req.session.user ? next() 
-    : req.flash("errors", "You must be logged in to perform that action.")
-      req.session.save(() => {
+    req.session.usr ? next() 
+    : req.session.save(() => {
+        req.flash('errors', "You must be logged in to perform that action.")
         res.redirect('/')
       })
     }
@@ -12,7 +12,7 @@ exports.loggedIn = function(req, res, next) {
 exports.login = (req, res) => { 
   const user = new User(req.body)
   user.login().then(result => {
-    req.session.usr = { username: user.data.username }
+    req.session.usr = { username: user.data.username, _id: user.data._id }
     req.session.save(() => {
         res.redirect('/')
     })
@@ -34,7 +34,7 @@ exports.logout = (req, res) => {
 exports.register = async (req, res) => {
   const user = new User(req.body)
   await user.register().then(() => {
-    req.session.usr = { username: user.data.username }
+    req.session.usr = { username: user.data.username, _id: user.data._id }
     req.session.save(() => {
         res.redirect('/')
     })
