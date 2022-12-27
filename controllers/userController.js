@@ -47,9 +47,8 @@ exports.register = async (req, res) => {
     })
   })
   
- // user.errors.length ? res.send(user.errors) : res.send("Congrats, there are no errors.")
 }
 
 exports.home = (req, res) => {
-  !req.session.usr ? res.render('home-guest') : res.render('home-dashboard', { username: req.session.usr.username })  
+  !req.session.usr ? res.render('home-guest') : res.render('home-dashboard')  
 }

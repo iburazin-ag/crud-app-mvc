@@ -21,8 +21,10 @@ app.use(flash())
  app.use((req, res, next) => {
      res.locals.errors = req.flash("errors")
      res.locals.regErrors = req.flash("regErrors")
+     res.locals.user = req.session.usr
      next()
  })
+
 
 const router = require('./router')
 
