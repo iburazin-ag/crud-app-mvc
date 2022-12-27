@@ -40,4 +40,15 @@ let Post = function(data, userid) {
     })
   }
 
+  Post.findSingleByID = function(id) {
+    return new Promise (async (resolve, reject) => {
+        if(typeof(id) != 'string' || !ObjectId.isValid(id)) {
+            reject()
+            return
+        }
+        const post = await postsCollection.findOne({ _id: new ObjectId(id) })
+        post ? resolve(post) : reject() 
+    })
+  }
+
   module.exports = Post

@@ -12,3 +12,13 @@ exports.createPost = (req, res) => {
         res.send(errors)
       })
 }
+
+exports.viewSinglePost = async (req, res) => {
+    try {
+        const post = await Post.findSingleByID(req.params.id)
+        res.render('single-post-screen', { post: post } )
+    } catch {
+        res.send("404 template placeholder")
+    }
+    
+}
