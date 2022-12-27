@@ -1,5 +1,14 @@
 const User = require('../models/User')
 
+exports.loggedIn = (req, res, next) => {
+   req.session.usr ? next() 
+    : req.session.save(() => {
+        req.flash("errors", "You must be logged in!") 
+        res.redirect('/')
+        })
+   
+}
+
 exports.login = (req, res) => { 
   const user = new User(req.body)
   user.login().then(result => {
