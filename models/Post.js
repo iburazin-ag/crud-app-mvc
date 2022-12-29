@@ -46,8 +46,27 @@ let Post = function(data, userid) {
             reject()
             return
         }
-        const post = await postsCollection.findOne({ _id: new ObjectId(id) })
-        post ? resolve(post) : reject() 
+        let posts = await postsCollection.aggregate([
+            { $match: { _id: new ObjectId(id)} },
+            { $lookup: { from: 'users', localField: 'author', foreignField: '_id', as: 'authorDocument' } },
+            { $project: { 
+                title: 1,
+                body: 1, 
+                createdDate: 1,
+                author: { $arrayElemAt: ['$authorDocument', 0] }
+             } }
+        ]).toArray()
+
+        posts = posts.map((post) => {
+            post.author = {
+                username: post.author.username
+            }
+
+            return post
+        }) 
+
+        posts.length ? resolve(posts[0]) : reject() 
+        
     })
   }
 
