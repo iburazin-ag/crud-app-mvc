@@ -67,5 +67,6 @@ exports.userExists = (req, res, next) => {
 
 
 exports.profilePostsScreen = (req, res) => {
+    console.log(req.body)
     res.render('profile', { profileUsername: req.profileUser.username })
 }

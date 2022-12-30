@@ -92,7 +92,6 @@ User.findByUsername = function(username) {
       username: userDoc.data.username
      }
      resolve(userDoc) 
-
     } else {
      reject()
    }
