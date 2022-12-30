@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const Post = require('../models/Post')
 
 exports.loggedIn = (req, res, next) => {
     req.session.usr ? next() 
@@ -67,6 +68,11 @@ exports.userExists = (req, res, next) => {
 
 
 exports.profilePostsScreen = (req, res) => {
-    console.log(req.body)
-    res.render('profile', { profileUsername: req.profileUser.username })
+    Post.findByAuthorId(req.profileUser._id).then((posts) => {
+        res.render('profile', { 
+            posts: posts,
+            profileUsername: req.profileUser.username })
+    }).catch(() => {
+        res.render('404')
+    })
 }
