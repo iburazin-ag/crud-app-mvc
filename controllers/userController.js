@@ -1,6 +1,6 @@
 const User = require('../models/User')
 
-exports.loggedIn = function(req, res, next) {
+exports.loggedIn = (req, res, next) => {
     req.session.usr ? next() 
     : req.session.save(() => {
         req.flash('errors', "You must be logged in to perform that action.")
@@ -49,6 +49,23 @@ exports.register = async (req, res) => {
   
 }
 
+
 exports.home = (req, res) => {
-  !req.session.usr ? res.render('home-guest') : res.render('home-dashboard')  
+    !req.session.usr ? res.render('home-guest') : res.render('home-dashboard')  
+}
+
+
+exports.userExists = (req, res, next) => {
+    User.findByUsername(req.params.username).then((userDocument) => {
+        req.profileUser = userDocument
+        next()
+    }).catch(() => {
+        res.render('404')
+    })
+
+}
+
+
+exports.profilePostsScreen = (req, res) => {
+    res.render('profile', { profileUsername: req.profileUser.username })
 }

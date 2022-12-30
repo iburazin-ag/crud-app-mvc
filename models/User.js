@@ -78,4 +78,31 @@ User.prototype.register = function() {
   })
 }
 
+User.findByUsername = function(username) {
+  return new Promise((resolve, reject) => {
+    if(typeof(username) != 'string') {
+      reject()
+      return
+  }
+   usersCollection.findOne({ username: username }).then((userDoc) => {
+   if (userDoc) {
+     userDoc = new User(userDoc, true)
+     userDoc = {
+      _id: userDoc.data._id,
+      username: userDoc.data.username
+     }
+     resolve(userDoc) 
+
+    } else {
+     reject()
+   }
+    
+   }).catch(() => {
+    reject(this.errors)
+   })
+  
+})
+  }
+
+
 module.exports = User
