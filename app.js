@@ -19,12 +19,12 @@ app.use(sessionOptions)
 app.use(flash())
 
  app.use((req, res, next) => {
+     req.session.user ? req.visitorId = req.session.user._id : req.visitorId = 0
      res.locals.errors = req.flash("errors")
      res.locals.regErrors = req.flash("regErrors")
       
-    req.session.user ? req.visitorId = req.session.user._id : req.visitorId = 0
+     res.locals.user = req.session.user
 
-     res.locals.user = req.session.usr
      next()
  })
 

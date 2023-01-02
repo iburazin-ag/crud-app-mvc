@@ -57,7 +57,6 @@ let Post = function(data, userid) {
 
         posts = posts.map((post) => {
             post.isVisitorOwner = post.authorId.equals(visitorId)
-
             post.author = {
                 username: post.author.username
             }

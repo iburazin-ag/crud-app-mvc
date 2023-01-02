@@ -2,7 +2,7 @@ const User = require('../models/User')
 const Post = require('../models/Post')
 
 exports.loggedIn = (req, res, next) => {
-    req.session.usr ? next() 
+    req.session.user ? next() 
     : req.session.save(() => {
         req.flash('errors', "You must be logged in to perform that action.")
         res.redirect('/')
@@ -13,7 +13,7 @@ exports.loggedIn = (req, res, next) => {
 exports.login = (req, res) => { 
   const user = new User(req.body)
   user.login().then(result => {
-    req.session.usr = { username: user.data.username, _id: user.data._id }
+    req.session.user = { username: user.data.username, _id: user.data._id }
     req.session.save(() => {
         res.redirect('/')
     })
@@ -35,7 +35,7 @@ exports.logout = (req, res) => {
 exports.register = async (req, res) => {
   const user = new User(req.body)
   await user.register().then(() => {
-    req.session.usr = { username: user.data.username, _id: user.data._id }
+    req.session.user = { username: user.data.username, _id: user.data._id }
     req.session.save(() => {
         res.redirect('/')
     })
@@ -52,7 +52,7 @@ exports.register = async (req, res) => {
 
 
 exports.home = (req, res) => {
-    !req.session.usr ? res.render('home-guest') : res.render('home-dashboard')  
+    !req.session.user ? res.render('home-guest') : res.render('home-dashboard')  
 }
 
 

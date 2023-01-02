@@ -5,7 +5,7 @@ exports.viewCreateScreen = (req, res) => {
 }
 
 exports.createPost = (req, res) => {
-    const post = new Post(req.body, req.session.usr._id)
+    const post = new Post(req.body, req.session.user._id)
     post.create().then(() => {
         res.send("New post created.")
       }).catch((errors) => {
@@ -17,6 +17,7 @@ exports.viewSinglePost = async (req, res) => {
     try {
         const post = await Post.findSingleByID(req.params.id, req.visitorId)
         res.render('single-post-screen', { post: post } )
+
     } catch {
         res.render('404')
     }
