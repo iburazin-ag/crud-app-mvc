@@ -39,10 +39,10 @@ export default class Search {
     }
 
     sendrequest() {
-        axios.post('/search', {searchTerm: this.inputField.value}).then(() => {
-
+        axios.post('/search', {searchTerm: this.inputField.value}).then(response => {
+          console.log(response.data)
         }).catch(() => {
-            alert('failed request')
+            alert('failed requesttt!!')
         })
     }
 

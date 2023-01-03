@@ -90,3 +90,11 @@ exports.deletePost = (req, res) => {
         req.session.save(() => res.redirect('/'))
     })
 }
+
+exports.searchItems = (req, res) => {
+    Post.search(req.body.searchTerm).then(posts => {
+        res.json(posts)
+    }).catch(() => {
+        res.json([])
+    })
+}
