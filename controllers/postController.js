@@ -15,7 +15,7 @@ exports.createPost = (req, res) => {
 
 exports.viewSinglePost = async (req, res) => {
     try {
-        let post = await Post.findSingleByID(req.params.id, req.visitorId)
+        let post = await Post.findSingleById(req.params.id, req.visitorId)
         res.render('single-post-screen', { post: post } )
 
     } catch {
@@ -27,7 +27,7 @@ exports.viewSinglePost = async (req, res) => {
 
 exports.viewEditScreen = async (req, res) => {
     try {
-        const post = await Post.findSingleByID(req.params.id)
+        const post = await Post.findSingleById(req.params.id)
         res.render('edit-post', { post: post } )
         
     } catch {
@@ -38,14 +38,14 @@ exports.viewEditScreen = async (req, res) => {
 
 exports.editPost = (req, res) => {
     let post = new Post(req.body, req.visitorId, req.params.id)
-    post.update().then((status) => {
+    post.updatePost().then((status) => {
         // the post was succesfully updated in the database
         // user did have permission but there were validation errors
         if (status == 'success') {
             //post was updated in db
             req.flash('success', "Post successfully updated!")
             req.session.save(() => {
-                res.res.redirect(`/post/${req.params.id}/edit`)
+                res.redirect(`/post/${req.params.id}/edit`)
             })
         } else {
             post.errors.forEach( error => {

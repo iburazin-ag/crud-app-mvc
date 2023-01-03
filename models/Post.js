@@ -1,10 +1,11 @@
 const postsCollection = require('../db').db().collection("posts")
 const ObjectId = require('mongodb').ObjectId
 
-let Post = function(data, userid) {
+let Post = function(data, userid, requestedPostId) {
     this.data = data
     this.errors = []
     this.userid = userid
+    this.requestedPostId = requestedPostId
   }
 
 
@@ -40,6 +41,42 @@ let Post = function(data, userid) {
     })
   }
 
+
+  Post.prototype.updatePost = function() {
+    return new Promise (async (resolve, reject) => {
+      try {
+        let post = await Post.findSingleById(this.requestedPostId, this.userid)
+        if (post.isVisitorOwner) {
+          let status = await this.dbUpdate()
+          resolve(status)
+        } else {
+          reject()
+        }
+      } catch {
+        reject()
+      }
+    })
+  }
+
+
+  Post.prototype.dbUpdate = function() {
+    return new Promise(async (resolve, reject) => {
+      this.cleanUp()
+      this.validate()
+
+      if(!this.errors.length) {
+       await postsCollection.findOneAndUpdate({ _id: new ObjectId(this.requestedPostId) }, { 
+          $set: { 
+            title: this.data.title, 
+            body: this.data.body
+          } } )
+          resolve("success")
+      } else {
+        resolve("failure")
+      }
+    })
+  }
+
   
 
   Post.reusablePostQuery = function(uniqueOperations, visitorId) {
@@ -70,7 +107,7 @@ let Post = function(data, userid) {
     })
   }
 
-  Post.findSingleByID = function(id, visitorId) {
+  Post.findSingleById = function(id, visitorId) {
     return new Promise (async (resolve, reject) => {
         if(typeof(id) != 'string' || !ObjectId.isValid(id)) {
             reject()
