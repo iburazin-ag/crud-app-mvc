@@ -15,7 +15,7 @@ exports.createPost = (req, res) => {
 
 exports.viewSinglePost = async (req, res) => {
     try {
-        const post = await Post.findSingleByID(req.params.id, req.visitorId)
+        let post = await Post.findSingleByID(req.params.id, req.visitorId)
         res.render('single-post-screen', { post: post } )
 
     } catch {
@@ -34,3 +34,32 @@ exports.viewEditScreen = async (req, res) => {
         res.render('404')
     }
 }
+
+
+exports.editPost = (req, res) => {
+    let post = new Post(req.body, req.visitorId, req.params.id)
+    post.update().then((status) => {
+        // the post was succesfully updated in the database
+        // user did have permission but there were validation errors
+        if (status == 'success') {
+            //post was updated in db
+            req.flash('success', "Post successfully updated!")
+            req.session.save(() => {
+                res.res.redirect(`/post/${req.params.id}/edit`)
+            })
+        } else {
+            post.errors.forEach( error => {
+                req.flash('errors', error)
+            })
+            req.session.save(() => {
+                res.redirect(`/post/${req.params.id}/edit`) })
+        }
+    }).catch(() => {
+        // a post with the requested ID doesn't exist
+        // the current visitor is not the owner of the requested post 
+        req.flash('errors', 'You do not have the permission to perform that action!')
+        req.session.save(() => {
+            res.redirect('/') })
+    })
+}
+

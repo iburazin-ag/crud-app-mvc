@@ -40,6 +40,8 @@ let Post = function(data, userid) {
     })
   }
 
+  
+
   Post.reusablePostQuery = function(uniqueOperations, visitorId) {
     return new Promise (async (resolve, reject) => {
         let aggOperations = uniqueOperations.concat([
