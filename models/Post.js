@@ -1,5 +1,6 @@
 const postsCollection = require('../db').db().collection("posts")
 const ObjectId = require('mongodb').ObjectId
+const sanitizeHTML = require('sanitize-html')
 
 let Post = function(data, userid, requestedPostId) {
     this.data = data
@@ -14,8 +15,8 @@ let Post = function(data, userid, requestedPostId) {
     if(typeof(this.data.body) != 'string') {this.data.body = ''}
 
     this.data = {
-        title: this.data.title.trim(),
-        body: this.data.body.trim(),
+        title:sanitizeHTML(this.data.title.trim(), { allowedTags: [], allowedAttributes: {}}),
+        body: sanitizeHTML(this.data.body.trim(), { allowedTags: [], allowedAttributes: {}}),
         createdDate: new Date(),
         author: ObjectId(this.userid)
       }
