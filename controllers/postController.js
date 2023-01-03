@@ -6,10 +6,12 @@ exports.viewCreateScreen = (req, res) => {
 
 exports.createPost = (req, res) => {
     const post = new Post(req.body, req.session.user._id)
-    post.create().then(() => {
-        res.send("New post created.")
-      }).catch((errors) => {
-        res.send(errors)
+    post.create().then((newId) => {
+        req.flash('success', 'New post successfully created!')
+        req.session.save(() => res.redirect(`/post/${newId}`))
+    }).catch((errors) => {
+        errors.forEach(error => req.flash('errors', error))
+        req.session.save(() => res.redirect('/create-post'))
       })
 }
 
@@ -28,13 +30,13 @@ exports.viewEditScreen = async (req, res) => {
     try {
       let post = await Post.findSingleById(req.params.id, req.visitorId)
       if (post.isVisitorOwner) {
-        res.render("edit-post", { post: post })
+        res.render('edit-post', { post: post })
       } else {
-        req.flash("errors", "You do not have permission to perform that action.")
-        req.session.save(() => res.redirect("/"))
+        req.flash('errors', 'You do not have permission to perform that action!')
+        req.session.save(() => res.redirect('/'))
       }
     } catch {
-      res.render("404")
+      res.render('404')
     }
   }
 

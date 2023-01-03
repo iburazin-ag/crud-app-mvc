@@ -32,8 +32,11 @@ let Post = function(data, userid, requestedPostId) {
         this.validate()
 
         if (!this.errors.length) {
-            await postsCollection.insertOne(this.data)
-            resolve()
+            await postsCollection.insertOne(this.data).then((info) => {
+              resolve(info.insertedId)
+            }).catch(() => {
+              this.errors.push("Please try again later.")
+            })
           } else {
             reject(this.errors)
           }
