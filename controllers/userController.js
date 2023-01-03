@@ -14,9 +14,7 @@ exports.login = (req, res) => {
   const user = new User(req.body)
   user.login().then(result => {
     req.session.user = { username: user.data.username, _id: user.data._id }
-    req.session.save(() => {
-        res.redirect('/')
-    })
+    req.session.save(() => res.redirect('/'))
   }).catch(e => {
       req.session.save(() => {
           req.flash('errors', e) 
@@ -36,16 +34,12 @@ exports.register = async (req, res) => {
   const user = new User(req.body)
   await user.register().then(() => {
     req.session.user = { username: user.data.username, _id: user.data._id }
-    req.session.save(() => {
-        res.redirect('/')
-    })
+    req.session.save(() => res.redirect('/'))
   }).catch((regErrors) => {
     regErrors.forEach((error) => {
         req.flash('regErrors', error)
     })
-    req.session.save(() => {
-        res.redirect('/')
-    })
+    req.session.save(() => res.redirect('/'))
   })
   
 }

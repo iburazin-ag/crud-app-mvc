@@ -15,6 +15,7 @@ exports.createPost = (req, res) => {
       })
 }
 
+
 exports.viewSinglePost = async (req, res) => {
     try {
         let post = await Post.findSingleById(req.params.id, req.visitorId)
@@ -74,8 +75,18 @@ exports.editPost = (req, res) => {
         // a post with the requested ID doesn't exist
         // the current visitor is not the owner of the requested post 
         req.flash('errors', 'You do not have the permission to perform that action!')
-        req.session.save(() => {
-            res.redirect('/') })
+        req.session.save(() => res.redirect('/'))
     })
 }
 
+
+exports.deletePost = (req, res) => {
+    Post.delete(req.params.id, req.visitorId).then(() => {
+        req.flash('success', 'Post successfully deleted!')
+        req.session.save(() => {
+            res.redirect(`/profile/${req.session.user.username}`) })
+    }).catch(() => {
+        req.flash('errors', 'You do not have the permission to perform that action!')
+        req.session.save(() => res.redirect('/'))
+    })
+}

@@ -21,7 +21,7 @@ app.use(sessionOptions)
 app.use(flash())
 
  app.use((req, res, next) => {
-    res.locals.filterUserHTML = content => {
+    res.locals.filterUserHTML = (content) => {
         return sanitizeHTML(markdown.parser(content), {
             allowedTags: ['p', 'br', 'ul', 'ol', 'li', 'strong', 'bold', 'i', 'em' ], 
             allowedAttributes: {}

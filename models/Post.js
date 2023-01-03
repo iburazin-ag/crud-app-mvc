@@ -129,4 +129,20 @@ let Post = function(data, userid, requestedPostId) {
         return Post.reusablePostQuery([ { $match: {author: authorId} }, { $sort: {createdDate: -1} } ])
   }
 
+  Post.delete = function(postIdToDelete, currentUserId) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let post = await Post.findSingleById(postIdToDelete, currentUserId)
+        if (post.isVisitorOwner) {
+          await postsCollection.deleteOne({ _id: new ObjectId(postIdToDelete) })
+          resolve()
+        } else {
+          reject()
+        }
+      } catch {
+        reject()
+      }
+    })
+  }
+
   module.exports = Post
