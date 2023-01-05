@@ -2,11 +2,11 @@ const postsCollection = require('../db').db().collection("posts")
 const ObjectId = require('mongodb').ObjectId
 const sanitizeHTML = require('sanitize-html')
 
-async function checkIndexes() {
-  const indexes = await postsCollection.indexes()
-  console.log(indexes)
-}
-checkIndexes()
+// async function checkIndexes() {
+//   const indexes = await postsCollection.indexes()
+//   console.log(indexes)
+// }
+// checkIndexes()
 
 let Post = function(data, userid, requestedPostId) {
     this.data = data
@@ -21,7 +21,7 @@ let Post = function(data, userid, requestedPostId) {
     if(typeof(this.data.body) != 'string') {this.data.body = ''}
 
     this.data = {
-        title:sanitizeHTML(this.data.title.trim(), { allowedTags: [], allowedAttributes: {}}),
+        title: sanitizeHTML(this.data.title.trim(), { allowedTags: [], allowedAttributes: {}}),
         body: sanitizeHTML(this.data.body.trim(), { allowedTags: [], allowedAttributes: {}}),
         createdDate: new Date(),
         author: ObjectId(this.userid)
